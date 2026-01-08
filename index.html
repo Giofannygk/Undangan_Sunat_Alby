@@ -32,7 +32,6 @@
 
         h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 700; line-height: 1.2; }
 
-        /* MUSIC CONTROL */
         #musicControl {
             position: fixed; top: 20px; right: 20px; z-index: 10001;
             background: rgba(176, 137, 104, 0.9); color: white;
@@ -44,7 +43,6 @@
         .rotating { animation: spin 4s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* COVER SECTION */
         #cover {
             position: fixed; top: 0; left: 0; width: 100%; height: 100dvh;
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('photo/img1.jpeg');
@@ -71,13 +69,17 @@
             cursor: pointer;
         }
 
-        /* MAIN CONTENT */
         .container { 
             max-width: 500px; margin: 0 auto; 
-            padding: 60px 25px 100px 25px; 
+            padding: 40px 25px 100px 25px; 
             text-align: center; display: none; 
         }
         .show-content { display: block; }
+
+        .countdown { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 40px; }
+        .time-box { background: var(--text-main); color: var(--white); padding: 12px; border-radius: 12px; flex: 1; }
+        .time-box span { display: block; font-size: 1.4rem; font-weight: bold; }
+        .time-box small { font-size: 0.7rem; }
 
         .photo-frame-main {
             width: 100%; max-width: 280px; height: 380px;
@@ -94,39 +96,20 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.03); margin: 40px 0; 
         }
 
-        .btn-maps {
-            display: inline-block; margin-top: 20px; background: var(--sage); 
-            color: white; padding: 12px 25px; border-radius: 30px; 
-            text-decoration: none; font-weight: 600; font-size: 0.9rem;
-        }
-
-        .countdown { display: flex; justify-content: space-between; gap: 10px; margin: 40px 0; }
-        .time-box { background: var(--text-main); color: var(--white); padding: 12px; border-radius: 12px; flex: 1; }
-        .time-box span { display: block; font-size: 1.4rem; font-weight: bold; }
-
-        .greeting-card { text-align: left; background: white; padding: 30px; border-radius: 20px; }
+        .card-form { text-align: left; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); margin-top: 40px; }
         input, textarea { width: 100%; padding: 15px; border: 1px solid #eee; border-radius: 12px; margin-top: 8px; font-size: 16px; background: #fafafa; font-family: inherit; }
-        .btn-submit { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: bold; margin-top: 20px; cursor: pointer; }
+        
+        .method-box {
+            border: 1px solid #eee; padding: 15px; border-radius: 12px; margin-top: 15px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 15px;
+        }
+        .method-box:hover { border-color: var(--accent); background: #fdfaf7; }
 
-        /* MODALS */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 10002; backdrop-filter: blur(5px); }
-        .modal-box { background: white; width: 88%; max-width: 400px; padding: 35px 25px; border-radius: 25px; text-align: center; position: relative; }
-        .btn-choice { display: flex; gap: 12px; margin-top: 25px; }
-        .btn-yes { flex: 1; padding: 14px; background: var(--sage); color: white; border: none; border-radius: 12px; font-weight: bold; }
-        .btn-no { flex: 1; padding: 14px; background: #f0f0f0; color: #666; border: none; border-radius: 12px; }
-
-        .copy-box { background: #f8f8f8; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin: 15px 0; border: 1px dashed var(--accent); }
-        .btn-copy { background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; }
+        .copy-box { background: #f8f8f8; padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin: 10px 0; border: 1px dashed var(--accent); }
+        .btn-copy { background: var(--accent); color: white; border: none; padding: 5px 10px; border-radius: 5px; font-size: 0.7rem; }
+        
+        .btn-submit { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: bold; margin-top: 25px; cursor: pointer; font-size: 1rem; }
         
         .hidden { display: none !important; }
-
-        /* STYLE BARU UNTUK LIST METODE */
-        .payment-method-btn {
-            width: 100%; text-align: left; margin-bottom: 12px; padding: 15px; 
-            display: flex; align-items: center; gap: 15px; background: #fff; 
-            border: 1px solid #eee; border-radius: 12px; cursor: pointer; transition: 0.3s;
-        }
-        .payment-method-btn:active { background: #f0f0f0; }
     </style>
 </head>
 <body>
@@ -153,6 +136,14 @@
     </div>
 
     <div class="container" id="mainContent">
+        
+        <div class="countdown" data-aos="fade-down">
+            <div class="time-box"><span id="days">00</span><small>Hari</small></div>
+            <div class="time-box"><span id="hours">00</span><small>Jam</small></div>
+            <div class="time-box"><span id="minutes">00</span><small>Menit</small></div>
+            <div class="time-box"><span id="seconds">00</span><small>Detik</small></div>
+        </div>
+
         <div data-aos="fade-up">
             <div style="color:var(--accent); font-size:1.8rem; margin-bottom: 10px;">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</div>
             <p>Assalamu’alaikum Warahmatullahi Wabarakatuh</p>
@@ -169,98 +160,67 @@
         <div class="details-section" data-aos="fade-up">
             <h2 style="color:var(--gold); margin-bottom:20px; font-size: 1.8rem;">Waktu & Tempat</h2>
             <div style="margin-bottom: 20px;">
-                <i class="far fa-calendar-alt" style="color:var(--accent); font-size: 1.5rem;"></i>
-                <p style="margin-top: 5px;"><strong>Minggu, 20 Agustus 2026</strong></p>
+                <i class="far fa-calendar-alt" style="color:var(--accent); font-size: 1.2rem;"></i>
+                <p><strong>Minggu, 20 Agustus 2026</strong></p>
                 <p>09.00 WIB - Selesai</p>
             </div>
             <div>
-                <i class="fas fa-map-marker-alt" style="color:var(--accent); font-size: 1.5rem;"></i>
-                <p style="margin-top: 5px;"><strong>Bertempatan Di</strong></p>
-                <p>KP Cilangkap RT 02 / RW 02, Kelurahan Setiawangi, Kecamatan Jatiwaras, Tasikmalaya</p>
+                <i class="fas fa-map-marker-alt" style="color:var(--accent); font-size: 1.2rem;"></i>
+                <p><strong>Bertempatan Di:</strong></p>
+                <p>KP. Cilangkap (Cicunging) RT 02 / RW 02, Kelurahan Setiawangi, Kecamatan Jatiwaras, Tasikmalaya</p>
             </div>
-            <a href="https://goo.gl/maps/xyz" target="_blank" class="btn-maps">
-                <i class="fas fa-location-arrow"></i> Buka Petunjuk Lokasi
-            </a>
         </div>
 
-        <div class="countdown" data-aos="fade-up">
-            <div class="time-box"><span id="days">00</span><small>Hari</small></div>
-            <div class="time-box"><span id="hours">00</span><small>Jam</small></div>
-            <div class="time-box"><span id="minutes">00</span><small>Menit</small></div>
-            <div class="time-box"><span id="seconds">00</span><small>Detik</small></div>
-        </div>
+        <div class="card-form" data-aos="fade-up">
+            <h2 style="text-align:center; margin-bottom: 25px; color: var(--gold);">Doa & Hadiah</h2>
+            
+            <form id="combinedForm">
+                <div style="margin-bottom: 20px;">
+                    <label style="font-size: 0.85rem; font-weight: bold;">Nama Anda (Wajib)</label>
+                    <input type="text" id="guestName" placeholder="Nama Lengkap" required>
+                </div>
+                <div style="margin-bottom: 25px;">
+                    <label style="font-size: 0.85rem; font-weight: bold;">Ucapan & Doa (Opsional)</label>
+                    <textarea id="guestMessage" placeholder="Tulis doa restu di sini..." rows="3"></textarea>
+                </div>
 
-        <div class="greeting-card" data-aos="fade-up">
-            <h2 style="text-align:center; margin-bottom: 25px; color: var(--gold);">Doa & Ucapan</h2>
-            <form id="greetingForm">
-                <input type="text" id="guestName" placeholder="Nama Anda" required>
-                <textarea id="guestMessage" placeholder="Tulis doa restu..." rows="3" required></textarea>
-                <button type="submit" class="btn-submit" id="btnSubmitMain">Kirim Ucapan</button>
+                <hr style="border: 0; border-top: 1px solid #eee; margin-bottom: 25px;">
+
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.85rem; font-weight: bold; color: var(--accent);">Nominal Hadiah Digital (Rp)</label>
+                    <input type="number" id="giftAmount" placeholder="Contoh: 100000">
+                    <p style="font-size: 0.75rem; color: #999; margin-top: 5px;">*Kosongkan jika hanya ingin mengirim doa</p>
+                </div>
+
+                <p style="font-size: 0.85rem; font-weight: bold; margin-top: 20px;">Pilih Metode (Shortcut):</p>
+                
+                <div class="method-box" onclick="toggleDetail('transfer')">
+                    <i class="fas fa-university" style="color: #005aa1;"></i>
+                    <div style="flex:1"><strong>Transfer Bank BCA</strong></div>
+                    <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: #ccc;"></i>
+                </div>
+                <div id="divBca" class="hidden" style="padding: 10px; background: #fafafa; border-radius: 0 0 12px 12px; border: 1px solid #eee; border-top: 0;">
+                    <p style="font-size: 0.8rem;">Nomor Rekening:</p>
+                    <div class="copy-box"><span id="norek">0670444627</span><button type="button" class="btn-copy" onclick="copyText('norek')">Salin</button></div>
+                    <p style="font-size: 0.8rem;">a.n ENENG SITI NURHAYATI</p>
+                </div>
+
+                <div class="method-box" onclick="toggleDetail('qris')">
+                    <i class="fas fa-qrcode" style="color: #e91e63;"></i>
+                    <div style="flex:1"><strong>Scan QRIS (E-Wallet)</strong></div>
+                    <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: #ccc;"></i>
+                </div>
+                <div id="divQris" class="hidden" style="padding: 15px; background: #fafafa; border-radius: 0 0 12px 12px; border: 1px solid #eee; border-top: 0; text-align: center;">
+                    <img src="photo/img2.jpeg" style="width: 100%; max-width: 200px; border-radius: 10px;">
+                    <p style="font-size: 0.75rem; color: #888; margin-top: 10px;">Silakan scan QRIS di atas</p>
+                </div>
+
+                <button type="submit" class="btn-submit" id="btnSubmitMain">Kirim Sekarang</button>
             </form>
         </div>
-    </div>
 
-    <div class="modal-overlay" id="modalGiftConfirm">
-        <div class="modal-box">
-            <i class="fas fa-heart" style="font-size: 3rem; color: var(--accent);"></i>
-            <h3 style="margin-top: 15px;">Terima Kasih!</h3>
-            <p style="margin: 15px 0; color: #666; font-size: 0.9rem;">Apakah Anda ingin mengirimkan tanda kasih digital untuk Alby?</p>
-            <div class="btn-choice">
-                <button class="btn-no" onclick="finishProcess()">Cukup Ucapan</button>
-                <button class="btn-yes" onclick="showGiftOptions()">Kirim Gift</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modalPayment">
-        <div class="modal-box">
-            <div style="position:absolute; top:15px; right:20px; font-size:1.8rem; color:#ccc; cursor:pointer;" onclick="closeModal('modalPayment')">&times;</div>
-            <h3 style="margin-bottom: 20px; color: var(--accent);">Kirim Hadiah Digital</h3>
-            
-            <div id="stepPaymentMain">
-                <div style="margin-bottom: 20px; text-align: left;">
-                    <label style="font-size: 0.85rem; font-weight: bold;">Nominal Hadiah (Rp)</label>
-                    <input type="number" id="giftAmount" placeholder="Contoh: 100000" style="text-align:center; border: 2px solid #eee;">
-                </div>
-
-                <p style="font-size: 0.85rem; font-weight: bold; text-align: left; margin-bottom: 10px;">Pilih Metode:</p>
-                
-                <div class="payment-method-btn" onclick="handlePaymentChoice('transfer')">
-                    <i class="fas fa-university" style="color: var(--accent); font-size: 1.2rem;"></i>
-                    <div>
-                        <div style="font-weight: bold;">Transfer Bank BCA</div>
-                        <div style="font-size: 0.75rem; color: #888;">Nomor Rekening</div>
-                    </div>
-                </div>
-
-                <div class="payment-method-btn" onclick="handlePaymentChoice('qris')">
-                    <i class="fas fa-qrcode" style="color: var(--accent); font-size: 1.2rem;"></i>
-                    <div>
-                        <div style="font-weight: bold;">Scan QRIS</div>
-                        <div style="font-size: 0.75rem; color: #888;">OVO, Dana, ShopeePay, dll</div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="paymentDetailSection" class="hidden">
-                <hr style="border: 0; border-top: 1px solid #eee; margin-bottom: 20px;">
-                
-                <div id="detailTransfer" class="hidden">
-                    <p style="font-weight: bold;">BANK BCA</p>
-                    <div class="copy-box"><span id="norek">0670444627</span><button class="btn-copy" onclick="copyText('norek')">Salin</button></div>
-                    <p style="font-size: 0.9rem;">a.n ENENG SITI NURHAYATI</p>
-                </div>
-                
-                <div id="detailQris" class="hidden">
-                    <div style="background: white; padding: 10px; border-radius: 15px; display: inline-block; border: 1px solid #eee;">
-                        <img src="photo/img2.jpeg" style="width:100%; max-width:220px; display: block;">
-                    </div>
-                    <p style="font-size: 0.8rem; color: #888; margin-top: 10px;">Screenshot QRIS di atas untuk membayar</p>
-                </div>
-
-                <button class="btn-submit" onclick="confirmPayment()">Konfirmasi Selesai</button>
-                <button onclick="backToMethods()" style="background:none; border:none; color: var(--accent); font-size: 0.8rem; margin-top: 15px; text-decoration: underline;">Ganti Metode</button>
-            </div>
+        <div style="margin-top: 60px; font-size: 0.8rem; color: #aaa; letter-spacing: 2px;">
+            - TERIMA KASIH -
         </div>
     </div>
 
@@ -271,7 +231,7 @@
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw3nQU7m_ajeNMVJSSeZ_kGHMhWjWfuompMoY4HK09igrXYT5eqTpkB5JPy9YzMKjxvrg/exec';
         const audio = document.getElementById("myAudio");
         let isPlaying = false;
-        let currentName, currentMessage, currentAmount, currentMethod;
+        let selectedMethod = "-";
 
         function openInvitation() {
             document.getElementById('cover').classList.add('open');
@@ -287,7 +247,21 @@
             isPlaying = !isPlaying;
         }
 
-        // Countdown
+        function toggleDetail(type) {
+            const bca = document.getElementById('divBca');
+            const qris = document.getElementById('divQris');
+            if(type === 'transfer') {
+                bca.classList.toggle('hidden');
+                qris.classList.add('hidden');
+                selectedMethod = bca.classList.contains('hidden') ? "-" : "Transfer BCA";
+            } else {
+                qris.classList.toggle('hidden');
+                bca.classList.add('hidden');
+                selectedMethod = qris.classList.contains('hidden') ? "-" : "QRIS";
+            }
+        }
+
+        // Countdown Logic
         const eventDate = new Date("Aug 20, 2026 09:00:00").getTime();
         setInterval(() => {
             const now = new Date().getTime();
@@ -300,71 +274,40 @@
             }
         }, 1000);
 
-        // Form Submission
-        document.getElementById('greetingForm').addEventListener('submit', function(e) {
+        // Submit Logic
+        document.getElementById('combinedForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            currentName = document.getElementById('guestName').value;
-            currentMessage = document.getElementById('guestMessage').value;
-            document.getElementById('modalGiftConfirm').style.display = 'flex';
+            const btn = document.getElementById('btnSubmitMain');
+            const name = document.getElementById('guestName').value;
+            const msg = document.getElementById('guestMessage').value || "No Message";
+            const amt = document.getElementById('giftAmount').value || 0;
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
+            btn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('nama', name);
+            formData.append('pesan', msg);
+            formData.append('nominal', amt);
+            formData.append('metode', selectedMethod);
+
+            fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: formData })
+            .then(() => {
+                alert("Pesan & Data Anda telah kami terima. Terima kasih!");
+                document.getElementById('combinedForm').reset();
+                document.getElementById('divBca').classList.add('hidden');
+                document.getElementById('divQris').classList.add('hidden');
+            })
+            .catch(() => alert("Terima kasih!"))
+            .finally(() => {
+                btn.innerHTML = 'Kirim Sekarang';
+                btn.disabled = false;
+            });
         });
 
-        function finishProcess() { 
-            sendData(currentName, currentMessage, 0, 'Hanya Ucapan'); 
-            closeModal('modalGiftConfirm'); 
-        }
-
-        function showGiftOptions() { 
-            closeModal('modalGiftConfirm'); 
-            document.getElementById('modalPayment').style.display = 'flex'; 
-        }
-        
-        function handlePaymentChoice(method) {
-            const amt = document.getElementById('giftAmount').value;
-            if(!amt || amt <= 0) {
-                alert("Masukkan nominal hadiah dahulu.");
-                return;
-            }
-            currentAmount = amt;
-            currentMethod = (method === 'transfer') ? 'Transfer BCA' : 'QRIS';
-            document.getElementById('stepPaymentMain').classList.add('hidden');
-            document.getElementById('paymentDetailSection').classList.remove('hidden');
-            if(method === 'transfer') {
-                document.getElementById('detailTransfer').classList.remove('hidden');
-                document.getElementById('detailQris').classList.add('hidden');
-            } else {
-                document.getElementById('detailTransfer').classList.add('hidden');
-                document.getElementById('detailQris').classList.remove('hidden');
-            }
-        }
-
-        function backToMethods() {
-            document.getElementById('stepPaymentMain').classList.remove('hidden');
-            document.getElementById('paymentDetailSection').classList.add('hidden');
-        }
-
-        function confirmPayment() { 
-            sendData(currentName, currentMessage, currentAmount, currentMethod); 
-            closeModal('modalPayment'); 
-        }
-
-        function sendData(name, msg, amount, method) {
-            const formData = new FormData();
-            formData.append('nama', name); 
-            formData.append('pesan', msg);
-            formData.append('nominal', amount); 
-            formData.append('metode', method);
-            fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: formData });
-            alert("Terima kasih!");
-        }
-
-        function copyText(id) { 
-            navigator.clipboard.writeText(document.getElementById(id).innerText); 
-            alert("Disalin!"); 
-        }
-        
-        function closeModal(id) { 
-            document.getElementById(id).style.display = 'none'; 
-            if(id === 'modalPayment') backToMethods();
+        function copyText(id) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text).then(() => alert("Nomor rekening disalin!"));
         }
     </script>
 </body>
